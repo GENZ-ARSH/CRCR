@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CareerWill - Premium Batches</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="manifest" href="/manifest.json">
+    <link rel="icon" href="/icon-192.png">
+    <meta name="theme-color" content="#facc15">
+    <script src="cookies.js"></script>
+    
+    <style>
+        /* Global Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        :root {
+            --primary-dark: #0f0f1e;
+            --primary-bg: #1a1a2e;
+            --accent-pink: #ff2d8a;
+            --accent-blue: #2d79ff;
+            --accent-purple: #a64dff;
+            --text-color: #ffffff;
+            --card-bg: rgba(26, 26, 64, 0.7);
+            --header-bg: rgba(15, 15, 30, 0.5);
+        }
+        
+        :root.light-theme {
+            --primary-dark: #d8d8e8;
+            --primary-bg: #e8e8f0;
+            --accent-pink: #e91e63;
+            --accent-blue: #1976d2;
+            --accent-purple: #8e24aa;
+            --text-color: #333333;
+            --card-bg: rgba(255, 255, 255, 0.7);
+            --header-bg: rgba(216, 216, 232, 0.7);
+        }
+
+        body {
+            background-color: transparent;
+            color: var(--text-color);
+            overflow-x: hidden;
+            position: relative;
+            min-height: 100vh;
+            transition: all 0.3s ease;
+        }
+
+        /* Particle Background */
+        #particles-js {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: -1;
+            background: linear-gradient(135deg, var(--primary-dark), var(--primary-bg));
+            transition: background 0.3s ease;
+        }
+        
+        #particles-js canvas {
+            display: block;
+            vertical-align: bottom;
+            z-index: -1;
+        }
+
+        /* Header Styles */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.8rem 5%;
+            position: relative;
+            z-index: 10;
+            backdrop-filter: blur(10px);
+            background: var(--header-bg);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+            animation: fadeInDown 1s ease;
+            transition: background 0.3s ease;
+        }
+
+        @media (max-width: 768px) {
+            .header-right {
+                margin-left: auto;
+            }
+        }
+
+        .logo {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--text-color);
+            position: relative;
+        }
+
+        .logo::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 3px;
+            background: linear-gradient(45deg, var(--accent-pink), var(--accent-blue));
+            transition: width 0.5s ease;
+        }
+
+        .logo:hover::after {
+            width: 100%;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+        }
+
+        nav ul li {
+            margin: 0 1.2rem;
+            position: relative;
+        }
+
+        nav ul li a {
+            color: var(--text-color);
+            text-decoration: none;
+            font-size: 1rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            padding: 0.5rem 0;
+            position: relative;
+        }
+
+        nav ul li a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--accent-pink);
+            transition: width 0.3s ease;
+        }
+
+        nav ul li a:hover {
+            color: var(--accent-pink);
+        }
+
+        nav ul li a:hover::after {
+            width: 100%;
+        }
+        
+        /* Main Content */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+            z-index: 1;
+            position: relative;
+        }
+
+        .hero-section {
+            text-align: center;
+            padding: 3rem 0;
+            position: relative;
+        }
+        
+        .hero-section h1 {
+            font-size: 2.8rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(45deg, var(--accent-pink), var(--accent-blue), var(--accent-purple));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            display: inline-block;
+            font-weight: 700;
+        }
+        
+        .hero-section p {
+            font-size: 1.2rem;
+            max-width: 700px;
+            margin: 0 auto 2rem;
+            opacity: 0.9;
+        }
+
+        /* Batch Cards */
+        .batch-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+        
+        .batch-card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+            transition: all 0.3s ease;
+            overflow: hidden;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            height: 100%;
+        }
+        
+        .batch-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.25);
+        }
+        
+        .batch-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(to right, var(--accent-pink), var(--accent-blue));
+        }
+        
+        .batch-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: var(--text-color);
+        }
+        
+        .batch-subtitle {
+            font-size: 1rem;
+            color: var(--accent-blue);
+            margin-bottom: 1rem;
+        }
+        
+        .batch-description {
+            margin-bottom: 1.5rem;
+            line-height: 1.5;
+            flex-grow: 1;
+        }
+        
+        .batch-features {
+            margin: 1rem 0;
+        }
+        
+        .feature {
+            display: flex;
+            align-items: center;
+            margin-bottom: 0.8rem;
+            font-size: 0.95rem;
+        }
+        
+        .feature i {
+            color: var(--accent-pink);
+            margin-right: 0.8rem;
+        }
+        
+        .batch-cta {
+            display: inline-block;
+            padding: 0.8rem 2rem;
+            background: linear-gradient(45deg, var(--accent-blue), var(--accent-purple));
+            border-radius: 30px;
+            color: white;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            text-align: center;
+            margin-top: 1rem;
+            border: none;
+            cursor: pointer;
+        }
+        
+        .batch-cta:hover {
+            background: linear-gradient(45deg, var(--accent-purple), var(--accent-blue));
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+        
+        /* Footer Styles */
+        footer {
+            text-align: center;
+            padding: 2rem 0;
+            margin-top: 3rem;
+            background: var(--header-bg);
+            backdrop-filter: blur(10px);
+        }
+
+        footer p {
+            margin: 0.5rem 0;
+        }
+        
+        footer a {
+            color: var(--accent-blue);
+            text-decoration: none;
+        }
+        
+        /* Animation */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .hero-section h1 {
+                font-size: 2rem;
+            }
+            
+            .hero-section p {
+                font-size: 1rem;
+            }
+            
+            .batch-cards {
+                grid-template-columns: 1fr;
+            }
+            
+            nav ul {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Particle Background -->
+    <div id="particles-js"></div>
+    
+    <!-- Header Section -->
+    <header>
+        <a href="/" class="logo">StudyEra</a>
+        <nav>
+            <ul>
+                <li><a href="/">Home</a></li>
+                <li><a href="/cw/upsc.html">UPSC</a></li>
+                <li><a href="/cw/sscarambh.html">SSC</a></li>
+                <li><a href="/about.html">About Us</a></li>
+            </ul>
+        </nav>
+        <div class="header-right">
+            <div class="theme-toggle">
+                <button id="theme-toggle-btn" title="Toggle theme">
+                    <i class="fas fa-moon"></i>
+                </button>
+            </div>
+            <div class="profile">
+                <a href="/login.html" title="Login">
+                    <i class="fas fa-user"></i>
+                </a>
+            </div>
+        </div>
+    </header>
+    
+    <!-- Main Content -->
+    <div class="container">
+        <section class="hero-section">
+            <h1>CareerWill Premium Batches</h1>
+            <p>Accelerate your preparation with our expert-led premium batches designed for maximum results</p>
+        </section>
+        
+        <div class="batch-cards">
+            <!-- Batch Card 1: UPSC NDA -->
+            <div class="batch-card">
+                <h2 class="batch-title">UPSC NDA Paramveer</h2>
+                <h3 class="batch-subtitle">Comprehensive Defense Preparation</h3>
+                <div class="batch-description">
+                    <p>Complete preparation for National Defence Academy entrance examination with specialized focus on Mathematics, GAT, and SSB interview.</p>
+                </div>
+                <div class="batch-features">
+                    <div class="feature">
+                        <i class="fas fa-check-circle"></i>
+                        <span>Complete subject coverage</span>
+                    </div>
+                    <div class="feature">
+                        <i class="fas fa-check-circle"></i>
+                        <span>Regular mock tests & analysis</span>
+                    </div>
+                    <div class="feature">
+                        <i class="fas fa-check-circle"></i>
+                        <span>Personal mentorship</span>
+                    </div>
+                </div>
+                <a href="/cw/upsc.html" class="batch-cta">View Details</a>
+            </div>
+            
+            <!-- Batch Card 2: SSC Combined -->
+            <div class="batch-card">
+                <h2 class="batch-title">SSC Combined</h2>
+                <h3 class="batch-subtitle">Staff Selection Commission</h3>
+                <div class="batch-description">
+                    <p>Intensive preparation for all SSC exams including CGL, CHSL, and MTS with specialized modules for Reasoning, Quantitative Aptitude, and English.</p>
+                </div>
+                <div class="batch-features">
+                    <div class="feature">
+                        <i class="fas fa-check-circle"></i>
+                        <span>Topic-wise approach</span>
+                    </div>
+                    <div class="feature">
+                        <i class="fas fa-check-circle"></i>
+                        <span>Daily practice exercises</span>
+                    </div>
+                    <div class="feature">
+                        <i class="fas fa-check-circle"></i>
+                        <span>Previous year analysis</span>
+                    </div>
+                </div>
+                <a href="/cw/sscarambh.html" class="batch-cta">View Details</a>
+            </div>
+            
+            <!-- Batch Card 3: Bihar Police Batch -->
+            <div class="batch-card">
+                <h2 class="batch-title">Bihar Police Recorded Batch</h2>
+                <h3 class="batch-subtitle">Comprehensive Constable & SI Preparation</h3>
+                <div class="batch-description">
+                    <p>Complete preparation for Bihar Police Constable and Sub-Inspector exams, covering all subjects including General Knowledge, Current Affairs, Hindi, Reasoning, and Science with expert faculty.</p>
+                </div>
+                <div class="batch-features">
+                    <div class="feature">
+                        <i class="fas fa-check-circle"></i>
+                        <span>Full syllabus coverage (Constable & SI)</span>
+                    </div>
+                    <div class="feature">
+                        <i class="fas fa-check-circle"></i>
+                        <span>Topic-wise recorded lectures</span>
+                    </div>
+                    <div class="feature">
+                        <i class="fas fa-check-circle"></i>
+                        <span>Practice PDFs & previous year papers</span>
+                    </div>
+                </div>
+                <a href="/cw/b-ploce.html" class="batch-cta">View Details</a>
+            </div>
+            <!-- Batch Card 4: GS Specials -->
+            <div class="batch-card">
+                <h2 class="batch-title">GS Specials</h2>
+                <h3 class="batch-subtitle">General Studies Mastery</h3>
+                <div class="batch-description">
+                    <p>Specialized batch for General Studies, covering all major topics including History, Geography, Polity, Economics, Science, and Current Affairs with expert guidance and updated content.</p>
+                </div>
+                <div class="batch-features">
+                    <div class="feature">
+                        <i class="fas fa-check-circle"></i>
+                        <span>Comprehensive GS coverage</span>
+                    </div>
+                    <div class="feature">
+                        <i class="fas fa-check-circle"></i>
+                        <span>Expert faculty sessions</span>
+                    </div>
+                    <div class="feature">
+                        <i class="fas fa-check-circle"></i>
+                        <span>Current Affairs updates</span>
+                    </div>
+                </div>
+                <a href="/cw/g-special.html" class="batch-cta">View Details</a>
+            </div>
+            
+            <!-- Batch Card 5: Railways -->
+            <div class="batch-card">
+                <h2 class="batch-title">Railways Achiever</h2>
+                <h3 class="batch-subtitle">RRB NTPC & Group D Preparation</h3>
+                <div class="batch-description">
+                    <p>Complete preparation for Railways exams (NTPC, Group D, ALP, Technician) with detailed coverage of Mathematics, Reasoning, General Awareness, and Science, following the latest exam pattern.</p>
+                </div>
+                <div class="batch-features">
+                    <div class="feature">
+                        <i class="fas fa-check-circle"></i>
+                        <span>Full syllabus for NTPC, Group D, ALP</span>
+                    </div>
+                    <div class="feature">
+                        <i class="fas fa-check-circle"></i>
+                        <span>Topic-wise recorded lectures</span>
+                    </div>
+                    <div class="feature">
+                        <i class="fas fa-check-circle"></i>
+                        <span>Practice PDFs & previous year papers</span>
+                    </div>
+                </div>
+                <a href="/cw/railways.html" class="batch-cta">View Details</a>
+            </div>
+            <!-- Batch Card 6: Delhi Police -->
+            <div class="batch-card">
+                <h2 class="batch-title">Delhi Police Constable</h2>
+                <h3 class="batch-subtitle">Constable & Head Constable Preparation</h3>
+                <div class="batch-description">
+                    <p>Targeted preparation for Delhi Police Constable and Head Constable exams, covering Reasoning, General Knowledge, Current Affairs, Numerical Ability, and Computer Awareness with expert guidance.</p>
+                </div>
+                <div class="batch-features">
+                    <div class="feature">
+                        <i class="fas fa-check-circle"></i>
+                        <span>Complete syllabus coverage</span>
+                    </div>
+                    <div class="feature">
+                        <i class="fas fa-check-circle"></i>
+                        <span>Recorded lectures & practice sets</span>
+                    </div>
+                    <div class="feature">
+                        <i class="fas fa-check-circle"></i>
+                        <span>Latest exam pattern & updates</span>
+                    </div>
+                </div>
+                <a href="/cw/d-police.html" class="batch-cta">View Details</a>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Footer -->
+    <footer>
+        <p>© 2023 CareerWill by StudyEra. All Rights Reserved.</p>
+        <p>
+            <a href="/contact.html">Contact Us</a> | 
+            <a href="/about.html">About Us</a>
+        </p>
+    </footer>
+    
+    <!-- Particles.js -->
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Initialize Particles.js
+            particlesJS('particles-js', {
+                particles: {
+                    number: {
+                        value: 80,
+                        density: {
+                            enable: true,
+                            value_area: 800
+                        }
+                    },
+                    color: {
+                        value: '#ffffff'
+                    },
+                    shape: {
+                        type: 'circle',
+                        stroke: {
+                            width: 0,
+                            color: '#000000'
+                        },
+                        polygon: {
+                            nb_sides: 5
+                        }
+                    },
+                    opacity: {
+                        value: 0.2,
+                        random: false,
+                        anim: {
+                            enable: false,
+                            speed: 1,
+                            opacity_min: 0.1,
+                            sync: false
+                        }
+                    },
+                    size: {
+                        value: 3,
+                        random: true,
+                        anim: {
+                            enable: false,
+                            speed: 40,
+                            size_min: 0.1,
+                            sync: false
+                        }
+                    },
+                    line_linked: {
+                        enable: true,
+                        distance: 150,
+                        color: '#ffffff',
+                        opacity: 0.2,
+                        width: 1
+                    },
+                    move: {
+                        enable: true,
+                        speed: 2,
+                        direction: 'none',
+                        random: false,
+                        straight: false,
+                        out_mode: 'out',
+                        bounce: false,
+                        attract: {
+                            enable: false,
+                            rotateX: 600,
+                            rotateY: 1200
+                        }
+                    }
+                },
+                interactivity: {
+                    detect_on: 'canvas',
+                    events: {
+                        onhover: {
+                            enable: true,
+                            mode: 'grab'
+                        },
+                        onclick: {
+                            enable: true,
+                            mode: 'push'
+                        },
+                        resize: true
+                    },
+                    modes: {
+                        grab: {
+                            distance: 140,
+                            line_linked: {
+                                opacity: 1
+                            }
+                        },
+                        bubble: {
+                            distance: 400,
+                            size: 40,
+                            duration: 2,
+                            opacity: 8,
+                            speed: 3
+                        },
+                        repulse: {
+                            distance: 200,
+                            duration: 0.4
+                        },
+                        push: {
+                            particles_nb: 4
+                        },
+                        remove: {
+                            particles_nb: 2
+                        }
+                    }
+                },
+                retina_detect: true
+            });
+            
+            // Theme toggle functionality
+            const themeToggleBtn = document.getElementById('theme-toggle-btn');
+            const themeIcon = themeToggleBtn.querySelector('i');
+            
+            themeToggleBtn.addEventListener('click', () => {
+                document.documentElement.classList.toggle('light-theme');
+                
+                if (document.documentElement.classList.contains('light-theme')) {
+                    themeIcon.classList.remove('fa-moon');
+                    themeIcon.classList.add('fa-sun');
+                } else {
+                    themeIcon.classList.remove('fa-sun');
+                    themeIcon.classList.add('fa-moon');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

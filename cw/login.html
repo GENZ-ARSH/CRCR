@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="/cookie-validator.js" defer></script>
+  <title>Login | CoderHub</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;600&display=swap" rel="stylesheet">
+  <link rel="manifest" href="/manifest.json">
+  <link rel="icon" href="/icon-192.png">
+  <meta name="theme-color" content="#facc15">
+  <script src="/init.js"></script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  // Check for cw_cookies cookie set
+  function getCookie(name) {
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) return parts.pop().split(';').shift();
+    return null;
+  }
+
+  // Check if user is authenticated first
+  const authValidation = validateAuthAccess ? validateAuthAccess() : { isValid: false };
+  
+  if (!authValidation.isValid) {
+    console.log('Authentication required, redirecting to auth page');
+    window.location.href = "/auth.html";
+    return;
+  }
+
+  // User is authenticated, now check if they have cw_cookies set
+  const cwCookies = getCookie('cw_cookies');
+  let loginValidation = { isValid: false };
+  if (typeof validateLoginAccess === 'function') {
+    // If validateLoginAccess uses cookies, we can override its check here if needed
+    loginValidation = validateLoginAccess();
+    // Optionally, you could patch validateLoginAccess to use 'cw_cookies' if you control that code
+  } else {
+    // Fallback: consider valid if cw_cookies exists
+    loginValidation.isValid = !!cwCookies;
+  }
+
+  // Store current URL for return after shortener process if needed
+  if (!loginValidation.isValid) {
+    console.log('cw_cookies required, user will need to complete shortener process');
+    sessionStorage.setItem('redirectUrl', window.location.pathname || 'index.html');
+  }
+});
+</script>
+  <style>
+    /* General Styling */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background: #1a0028; /* Dark purple background */
+      overflow: hidden;
+      position: relative;
+      color: #ffffff;
+    }
+
+    /* Particle Background */
+    #particles-js {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+    }
+
+    /* Cyberpunk-Themed Box */
+    .container {
+      background: rgba(255, 255, 255, 0.07);
+      border-radius: 15px;
+      padding: 30px;
+      width: 400px;
+      text-align: center;
+      box-shadow: 0 0 15px rgba(246, 226, 122, 0.3); /* Golden glow */
+      border: 1px solid rgba(246, 226, 122, 0.2);
+      backdrop-filter: blur(8px);
+    }
+
+    h2 {
+      font-size: 24px;
+      color: #f6e27a; /* Golden text */
+      text-shadow: 0 0 10px rgba(246, 226, 122, 0.5);
+    }
+
+    p {
+      font-size: 14px;
+      margin-bottom: 20px;
+      color: #ffffff;
+    }
+
+    /* Buttons */
+    .button {
+      display: inline-block;
+      width: 100%;
+      padding: 12px;
+      font-size: 15px;
+      color: #ffffff;
+      border: 1px solid #f6e27a; /* Golden border */
+      background: transparent;
+      border-radius: 8px;
+      cursor: pointer;
+      margin: 8px 0;
+      font-weight: 600;
+      transition: 0.3s;
+      text-transform: uppercase;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .button:hover {
+      background: #f6e27a; /* Golden background on hover */
+      color: #1a0028; /* Dark purple text on hover */
+      box-shadow: 0 0 12px rgba(246, 226, 122, 0.6);
+    }
+
+    /* Key Generation Animation */
+    .loading {
+      font-size: 13px;
+      color: #f6e27a; /* Golden loading text */
+      margin-top: 10px;
+      display: none;
+      animation: flicker 1.5s infinite alternate;
+    }
+
+    /* Subtle Glow */
+    @keyframes flicker {
+      from {
+        opacity: 0.6;
+      }
+      to {
+        opacity: 1;
+      }
+    }
+
+    :root {
+      --primary-blue: #9370DB; /* Purple */
+      --accent-red: #f6e27a; /* Golden */
+      --dark-bg: #1a0028; /* Dark purple */
+      --pure-white: #ffffff;
+    }
+
+    .login-container {
+      background: rgba(0, 0, 0, 0.6);
+      padding: 2rem;
+      border-radius: 15px;
+      width: 90%;
+      max-width: 450px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    h1 {
+      font-size: 2rem;
+      text-align: center;
+      margin-bottom: 1.5rem;
+      color: var(--accent-red);
+      text-shadow: 0 2px 4px rgba(255, 0, 0, 0.3);
+    }
+
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 1.2rem;
+    }
+
+    .form-group {
+      position: relative;
+    }
+
+    input {
+      width: 100%;
+      padding: 1rem;
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      color: var(--pure-white);
+      font-size: 1rem;
+      transition: all 0.3s ease;
+    }
+
+    input:focus {
+      outline: none;
+    }
+  </style>
+
+</head>
+<body>
+  <div id="particles-js"></div>
+  <div class="container">
+    <h2>Generate Your Access Key</h2>
+    <p>Click the button below to generate your key.<br><br>Validity: 30 hours ⏰</p>
+    <button id="server02" class="button">Website Server - 1</button>
+    <button id="server03Url" class="button">Website Server - 2</button><br> 
+    <button id="recommendServer" class="button">Website Server - 3</button><br>
+    <button id="watchVideo" class="button">TUTORIAL VIDEO [EASY METHOD]</button>
+    <p>Please do <strong>Watch TUTORIAL Video FIRST</strong>, so that you not face any Problem.</p>
+    <p class="loading" id="loadingMessage">Generating URL, please wait...</p>
+  </div>
+
+  <script>
+    // 🧠 Particles + Visuals (already working)
+    particlesJS("particles-js", {
+      particles: {
+        number: { value: 120, density: { enable: true, value_area: 800 } },
+        color: { value: "#f6e27a" },
+        shape: { type: "circle" },
+        opacity: { value: 0.7, random: true },
+        size: { value: 3, random: true },
+        line_linked: {
+          enable: true, distance: 150, color: "#9370DB",
+          opacity: 0.5, width: 1.5
+        },
+        move: {
+          enable: true, speed: 2, direction: "none", random: true,
+          out_mode: "out", bounce: false
+        }
+      },
+      interactivity: {
+        detect_on: "canvas",
+        events: {
+          onhover: { enable: true, mode: "repulse" },
+          onclick: { enable: true, mode: "push" }
+        },
+        modes: {
+          repulse: { distance: 200, duration: 0.4 },
+          push: { particles_nb: 4 }
+        }
+      },
+      retina_detect: true
+    });
+
+    // 🔐 Cookie functions from validator
+    function setCookie(name, value, hours) {
+      const date = new Date();
+      date.setTime(date.getTime() + hours * 60 * 60 * 1000);
+      const expires = "expires=" + date.toUTCString();
+      document.cookie = `${name}=${value}; ${expires}; path=/; SameSite=Lax`;
+    }
+
+    // Set only one cookie: cw_cookies
+    function setAccessCookie() {
+      // Use the function from cookie-validator.js if available
+      if (typeof setLoginCookies === 'function') {
+        // If setLoginCookies supports custom cookie name, pass 'cw_cookies'
+        // Otherwise, fallback to our implementation
+        try {
+          return setLoginCookies('cw_cookies');
+        } catch (e) {
+          // fallback below
+        }
+      }
+      // Fallback implementation: set a single cookie 'cw_cookies'
+      const now = Date.now();
+      console.log('Setting cw_cookies with timestamp:', now);
+      setCookie('cw_cookies', now.toString(), 30);
+    }
+
+    // 🔁 After user clicks and goes to shortlink
+    const courseUrls = {
+      server02: 'https://vplink.in/BYhRBDkw',
+      server03: 'https://vplink.in/BYhRBDkw',
+      recommendServer: 'https://vplink.in/BYhRBDkw',
+      tutorialVideo: 'https://t.me/discussioncoders/9722'
+    };
+
+    function setAccessAndRedirect(targetUrl) {
+      if (!targetUrl) return alert("Invalid URL!");
+
+      // Set cw_cookies for shortener process
+      setAccessCookie();
+
+      document.getElementById("loadingMessage").style.display = "block";
+
+      const redirectUrl = sessionStorage.getItem('redirectUrl') || 'index.html';
+      sessionStorage.setItem('returnUrl', redirectUrl);
+
+      window.location.href = targetUrl;
+    }
+
+    // Button click listeners
+    document.getElementById("server02").addEventListener("click", () => {
+      setAccessAndRedirect(courseUrls.server02);
+    });
+
+    document.getElementById("server03Url").addEventListener("click", () => {
+      setAccessAndRedirect(courseUrls.server03);
+    });
+
+    document.getElementById("recommendServer").addEventListener("click", () => {
+      setAccessAndRedirect(courseUrls.recommendServer);
+    });
+
+    document.getElementById("watchVideo").addEventListener("click", () => {
+      window.open(courseUrls.tutorialVideo, '_blank');
+    });
+
+    // Auto-redirect after coming back from shortener if both auth and login cookies are valid
+    const returnUrl = sessionStorage.getItem('returnUrl');
+    if (returnUrl) {
+      // Check if both auth and login cookies are valid
+      // For login cookies, check for 'cw_cookies'
+      function getCookie(name) {
+        const value = `; ${document.cookie}`;
+        const parts = value.split(`; ${name}=`);
+        if (parts.length === 2) return parts.pop().split(';').shift();
+        return null;
+      }
+      const cwCookies = getCookie('cw_cookies');
+      const fullValidation = (typeof validateBatchAccess === 'function')
+        ? validateBatchAccess()
+        : { isValid: !!cwCookies };
+
+      if (fullValidation.isValid) {
+        console.log('Full access validated, redirecting to:', returnUrl);
+        sessionStorage.removeItem('returnUrl');
+        window.location.href = returnUrl;
+      }
+    }
+  </script>
+  
+</body>
+</html>
